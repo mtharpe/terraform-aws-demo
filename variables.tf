@@ -8,7 +8,7 @@ variable "private_key" {
 
 variable "key_name" {
   description = "Desired name of AWS key pair"
-  default     = "terraform"
+  default     = "mtharpe-demo-terraform"
 }
 
 variable "aws_region" {
@@ -29,31 +29,6 @@ variable "instance_username" {
 }
 
 variable "instance_password" {
-  default = ""
-}
-
-variable "local_ip" {
-  default = "68.44.31.188/32"
-}
-
-# Chef global vars
-variable "chef_environment" {
-  default = "_default"
-}
-
-variable "server_runlist" {
-  default = "server::default"
-}
-
-variable "chef_server_url" {
-  default = "https://api.chef.io/organizations/axis"
-}
-
-variable "chef_username" {
-  default = "mtharpe"
-}
-
-variable "chef_pem" {
   default = ""
 }
 

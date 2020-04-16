@@ -14,6 +14,33 @@ resource "aws_key_pair" "auth" {
   public_key = var.public_key
 }
 
+module "vpc" {
+  source  = "app.terraform.io/mtharpe/vpc/aws"
+  version = "1.0.0"
+
+  name = "mtharpe-demo-vpc"
+  cidr = "10.0.0.0/16"
+
+  azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
+
+  private_subnets  = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+  database_subnets = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+  public_subnets   = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+
+  create_database_subnet_group = true
+
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+  enable_nat_gateway = false
+  enable_vpn_gateway = false
+
+  tags = {
+    Terraform   = "true"
+    Environment = "Demo"
+  }
+}
+
 ########################################
 # List all availability zones to be used
 ########################################
@@ -24,9 +51,9 @@ data "aws_availability_zones" "available" {
 # Default Security group
 ########################
 resource "aws_security_group" "default" {
-  name        = "demo-tfe default sg"
+  name        = "mtharpe-demo-tfe default sg"
   description = "Used in the terraform"
-  vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   # SSH access from the VPC and LocalIP
   ingress {
@@ -104,7 +131,7 @@ resource "aws_instance" "web-01" {
   ami                    = var.aws_ami_linux
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[0]
+  subnet_id              = module.vpc.public_subnets[0]
 
   provisioner "remote-exec" {
     inline = [
@@ -137,7 +164,7 @@ resource "aws_instance" "mgmt-01" {
   ami                    = var.aws_ami_windows
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[0]
+  subnet_id              = module.vpc.public_subnets[0]
   user_data              = <<EOF
 <script>
   winrm quickconfig -q & winrm set winrm/config @{MaxTimeoutms="1800000"} & winrm set winrm/config/service @{AllowUnencrypted="true"} & winrm set winrm/config/service/auth @{Basic="true"}
@@ -183,13 +210,18 @@ resource "aws_instance" "jenkins-01" {
   ami                    = var.aws_ami_linux
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[1]
+  subnet_id              = module.vpc.public_subnets[1]
 
   provisioner "remote-exec" {
     inline = [
       "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
       "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
-      "sudo apt install zip -y"
+      "sudo apt install zip default-jdk -y",
+      "wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -",
+      "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
+      "sudo add-apt-repository universe",
+      "sudo apt-get update",
+      "sudo apt-get install jenkins -y"
     ]
   }
 }
@@ -201,11 +233,11 @@ resource "aws_db_instance" "default" {
   allocated_storage      = 10
   engine                 = "mysql"
   instance_class         = "db.t2.micro"
-  name                   = "mtharpe-webdb"
-  username               = "dbuser"
-  password               = "dbpassword1"
+  name                   = "mtharpe-demo-webdb"
+  username               = var.instance_username
+  password               = var.instance_password
   vpc_security_group_ids = [aws_security_group.default.id]
-  db_subnet_group_name   = data.terraform_remote_state.vpc.outputs.database_subnet_group
+  db_subnet_group_name   = module.vpc.database_subnet_group
   skip_final_snapshot    = true
 }
 
