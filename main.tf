@@ -45,7 +45,7 @@ resource "aws_security_group" "default" {
 
   # RDP access from the VPC and LocalIP
   ingress {
-    from_port   = 3389 
+    from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
     cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
@@ -93,18 +93,18 @@ resource "aws_instance" "web-01" {
   }
 
   connection {
-    host = coalesce(self.public_ip, self.private_ip)
-    type = "ssh"
-    user = "ubuntu"
+    host        = coalesce(self.public_ip, self.private_ip)
+    type        = "ssh"
+    user        = "ubuntu"
     private_key = var.private_key
   }
 
   instance_type = "t2.micro"
 
-  ami = var.aws_ami_linux
-  key_name = aws_key_pair.auth.id
+  ami                    = var.aws_ami_linux
+  key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = data.terraform_remote_state.vpc.outputs.public_subnets[0]
+  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[0]
 
   provisioner "remote-exec" {
     inline = [
@@ -134,11 +134,11 @@ resource "aws_instance" "mgmt-01" {
   source_dest_check       = true
   disable_api_termination = false
 
-  ami = var.aws_ami_windows
-  key_name = aws_key_pair.auth.id
+  ami                    = var.aws_ami_windows
+  key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = data.terraform_remote_state.vpc.outputs.public_subnets[0]
-  user_data = <<EOF
+  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[0]
+  user_data              = <<EOF
 <script>
   winrm quickconfig -q & winrm set winrm/config @{MaxTimeoutms="1800000"} & winrm set winrm/config/service @{AllowUnencrypted="true"} & winrm set winrm/config/service/auth @{Basic="true"}
 </script>
@@ -170,9 +170,9 @@ resource "aws_instance" "jenkins-01" {
   }
 
   connection {
-    host = coalesce(self.public_ip, self.private_ip)
-    type = "ssh"
-    user = "ubuntu"
+    host        = coalesce(self.public_ip, self.private_ip)
+    type        = "ssh"
+    user        = "ubuntu"
     private_key = var.private_key
   }
 
@@ -180,10 +180,10 @@ resource "aws_instance" "jenkins-01" {
   source_dest_check       = true
   disable_api_termination = false
 
-  ami = var.aws_ami_linux
-  key_name = aws_key_pair.auth.id
+  ami                    = var.aws_ami_linux
+  key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id = data.terraform_remote_state.vpc.outputs.public_subnets[1]
+  subnet_id              = data.terraform_remote_state.vpc.outputs.public_subnets[1]
 
   provisioner "remote-exec" {
     inline = [

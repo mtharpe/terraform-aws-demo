@@ -8,12 +8,12 @@ variable "private_key" {
 
 variable "key_name" {
   description = "Desired name of AWS key pair"
-  default = "terraform"
+  default     = "terraform"
 }
 
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default = "us-east-2"
+  default     = "us-east-2"
 }
 
 variable "aws_ami_linux" {
