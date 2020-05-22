@@ -15,10 +15,10 @@ resource "aws_key_pair" "auth" {
 }
 
 module "vpc" {
-  source  = "app.terraform.io/mtharpe/vpc/aws"
+  source  = "app.terraform.io/${var.user}/vpc/aws"
   version = "1.0.0"
 
-  name = "mtharpe-demo-vpc"
+  name = "${var.user}-demo-vpc"
   cidr = "10.0.0.0/16"
 
   azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
@@ -51,7 +51,7 @@ data "aws_availability_zones" "available" {
 # Default Security group
 ########################
 resource "aws_security_group" "default" {
-  name        = "mtharpe-demo-tfe default sg"
+  name        = "${var.user}-demo-tfe default sg"
   description = "Used in the terraform"
   vpc_id      = module.vpc.vpc_id
 
@@ -116,7 +116,7 @@ resource "aws_security_group" "default" {
 ##############
 resource "aws_instance" "web-01" {
   tags = {
-    Name = "mtharpe-web-01"
+    Name = "${var.user}-web-01"
   }
 
   connection {
@@ -147,7 +147,7 @@ resource "aws_instance" "web-01" {
 #####################
 resource "aws_instance" "mgmt-01" {
   tags = {
-    Name = "mtharpe-mgmt-01"
+    Name = "${var.user}-mgmt-01"
   }
 
   connection {
@@ -193,7 +193,7 @@ EOF
 ###################
 resource "aws_instance" "jenkins-01" {
   tags = {
-    Name = "mtharpe-jenkins-01"
+    Name = "${var.user}-jenkins-01"
   }
 
   connection {
@@ -233,7 +233,7 @@ resource "aws_db_instance" "default" {
   allocated_storage      = 10
   engine                 = "mysql"
   instance_class         = "db.t2.micro"
-  name                   = "mtharpeDemoDB"
+  name                   = "${var.user}DemoDB"
   username               = var.instance_username
   password               = var.instance_password
   vpc_security_group_ids = [aws_security_group.default.id]

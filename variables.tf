@@ -1,3 +1,7 @@
+variable "user" {
+  description = "This is going to be the Org username"
+}
+
 variable "public_key" {
   description = "Public key info"
 }
