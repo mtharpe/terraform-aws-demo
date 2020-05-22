@@ -217,7 +217,7 @@ resource "aws_instance" "jenkins-01" {
       "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
       "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
       "sudo apt install zip default-jdk -y",
-      "wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -",
+      "wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -",
       "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
       "sudo add-apt-repository universe",
       "sudo apt-get update",
