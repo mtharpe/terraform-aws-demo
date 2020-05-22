@@ -21,7 +21,7 @@ variable "aws_region" {
 }
 
 variable "aws_ami_linux" {
-  default = "ami-0fc20dd1da406780b"
+  default = "ami-07c1207a9d40bc3bd"
 }
 
 variable "aws_ami_windows" {
