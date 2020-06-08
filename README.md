@@ -40,3 +40,13 @@ Terraform demo in aws
 ## Outputs
 
 No output
+
+## License and Maintainer
+
+Maintainer:: HashiCorp (<hello@hashicorp.com>)
+
+Source:: https://github.com/mtharpe/terraform-aws-demo
+
+Issues:: https://github.com/mtharpe/terraform-aws-demo/issues
+
+License:: Apache-2.0
