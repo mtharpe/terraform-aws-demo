@@ -153,8 +153,8 @@ resource "aws_instance" "mgmt-01" {
   connection {
     host     = aws_instance.mgmt-01.public_ip
     type     = "winrm"
-    user     = var.instance_username
-    password = var.instance_password
+    user     = var.aws_instance_username
+    password = var.aws_instance_password
   }
 
   instance_type           = "t2.medium"
@@ -171,8 +171,8 @@ resource "aws_instance" "mgmt-01" {
 </script>
 <powershell>
 netsh advfirewall firewall add rule name="WinRM in" protocol=TCP dir=in profile=any localport=5985 remoteip=any localip=any action=allow
-net user ${var.instance_username} '${var.instance_password}' /add /y
-net localgroup administrators ${var.instance_username} /add
+net user ${var.aws_instance_username} '${var.aws_instance_password}' /add /y
+net localgroup administrators ${var.aws_instance_username} /add
 </powershell>
 EOF
 
@@ -234,8 +234,8 @@ resource "aws_db_instance" "default" {
   engine                 = "mysql"
   instance_class         = "db.t2.micro"
   name                   = "${var.user}DemoDB"
-  username               = var.instance_username
-  password               = var.instance_password
+  username               = var.aws_instance_username
+  password               = var.aws_instance_password
   vpc_security_group_ids = [aws_security_group.default.id]
   db_subnet_group_name   = module.vpc.database_subnet_group
   skip_final_snapshot    = true

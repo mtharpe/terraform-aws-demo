@@ -28,11 +28,11 @@ variable "aws_ami_windows" {
   default = "ami-067317d2d40fd5919"
 }
 
-variable "instance_username" {
+variable "aws_instance_username" {
   default = ""
 }
 
-variable "instance_password" {
+variable "aws_instance_password" {
   default = ""
 }
 
