@@ -25,7 +25,7 @@ variable "aws_ami_linux" {
 }
 
 variable "aws_ami_windows" {
-  default = "ami-067317d2d40fd5919"
+  default = "ami-0dab4b4b372b05414"
 }
 
 variable "aws_instance_username" {
