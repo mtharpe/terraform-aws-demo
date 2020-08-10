@@ -126,7 +126,7 @@ resource "aws_instance" "web-01" {
     private_key = var.private_key
   }
 
-  instance_type = "t2.micro" # can be t2.large
+  instance_type = "t2.large" # can be t2.large
 
   ami                    = var.aws_ami_linux
   key_name               = aws_key_pair.auth.id
