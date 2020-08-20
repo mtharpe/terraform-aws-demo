@@ -126,7 +126,7 @@ resource "aws_instance" "web-01" {
     private_key = var.private_key
   }
 
-  instance_type = "t2.micro"
+  instance_type = "t2.large" # can be t2.large
 
   ami                    = var.aws_ami_linux
   key_name               = aws_key_pair.auth.id
@@ -191,53 +191,53 @@ EOF
 ###################
 # Jenkins Instances
 ###################
-resource "aws_instance" "jenkins-01" {
-  tags = {
-    Name = "${var.user}-jenkins-01"
-  }
+# resource "aws_instance" "jenkins-01" {
+#  tags = {
+#    Name = "${var.user}-jenkins-01"
+#  }
 
-  connection {
-    host        = coalesce(self.public_ip, self.private_ip)
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = var.private_key
-  }
+#  connection {
+#    host        = coalesce(self.public_ip, self.private_ip)
+#    type        = "ssh"
+#    user        = "ubuntu"
+#    private_key = var.private_key
+#  }
 
-  instance_type           = "t2.micro"
-  source_dest_check       = true
-  disable_api_termination = false
+#  instance_type           = "t2.micro"
+#  source_dest_check       = true
+#  disable_api_termination = false
 
-  ami                    = var.aws_ami_linux
-  key_name               = aws_key_pair.auth.id
-  vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id              = module.vpc.public_subnets[1]
+#  ami                    = var.aws_ami_linux
+#  key_name               = aws_key_pair.auth.id
+#  vpc_security_group_ids = [aws_security_group.default.id]
+#  subnet_id              = module.vpc.public_subnets[1]
 
-  provisioner "remote-exec" {
-    inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
-      "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
-      "sudo apt install zip default-jdk -y",
-      "wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -",
-      "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
-      "sudo add-apt-repository universe",
-      "sudo apt-get update",
-      "sudo apt-get install jenkins -y"
-    ]
-  }
-}
+#  provisioner "remote-exec" {
+#    inline = [
+#      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
+#      "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
+#      "sudo apt install zip default-jdk -y",
+#      "wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -",
+#      "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
+#      "sudo add-apt-repository universe",
+#      "sudo apt-get update",
+#      "sudo apt-get install jenkins -y"
+#    ]
+#  }
+#}
 
 ###################
 # Database Instance
 ###################
-resource "aws_db_instance" "default" {
-  allocated_storage      = 10
-  engine                 = "mysql"
-  instance_class         = "db.t2.micro"
-  name                   = "${var.user}DemoDB"
-  username               = var.aws_instance_username
-  password               = var.aws_instance_password
-  vpc_security_group_ids = [aws_security_group.default.id]
-  db_subnet_group_name   = module.vpc.database_subnet_group
-  skip_final_snapshot    = true
-}
+# resource "aws_db_instance" "default" {
+#  allocated_storage      = 10
+#  engine                 = "mysql"
+#  instance_class         = "db.t2.micro"
+#  name                   = "${var.user}DemoDB"
+#  username               = var.aws_instance_username
+#  password               = var.aws_instance_password
+#  vpc_security_group_ids = [aws_security_group.default.id]
+#  db_subnet_group_name   = module.vpc.database_subnet_group
+#  skip_final_snapshot    = true
+#}
 
