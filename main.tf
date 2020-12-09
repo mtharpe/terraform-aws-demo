@@ -6,6 +6,37 @@ provider "aws" {
   version = ">= 2.0"
 }
 
+#########################################
+# Get all of the AMI's from AWS
+#########################################
+data "aws_ami" "windows" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2019-English-Full-Base-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["801119661308"] # Canonical
+}
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 ##############################
 # Setup key for authentication
 ##############################
@@ -128,7 +159,7 @@ resource "aws_instance" "web-01" {
 
   instance_type = "t2.large" # can be t2.large
 
-  ami                    = var.aws_ami_linux
+  ami                    = data.aws_ami.ubuntu.id
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id              = module.vpc.public_subnets[0]
@@ -142,51 +173,51 @@ resource "aws_instance" "web-01" {
   }
 }
 
-// #####################
-// # Management Instance
-// #####################
-// resource "aws_instance" "mgmt-01" {
-//   tags = {
-//     Name = "${var.user}-mgmt-01"
-//   }
+#####################
+# Management Instance
+#####################
+resource "aws_instance" "mgmt-01" {
+  tags = {
+    Name = "${var.user}-mgmt-01"
+  }
 
-//   connection {
-//     host     = aws_instance.mgmt-01.public_ip
-//     type     = "winrm"
-//     user     = var.aws_instance_username
-//     password = var.aws_instance_password
-//   }
+  connection {
+    host     = aws_instance.mgmt-01.public_ip
+    type     = "winrm"
+    user     = var.aws_instance_username
+    password = var.aws_instance_password
+  }
 
-//   instance_type           = "t2.medium"
-//   source_dest_check       = true
-//   disable_api_termination = false
+  instance_type           = "t2.medium"
+  source_dest_check       = true
+  disable_api_termination = false
 
-//   ami                    = var.aws_ami_windows
-//   key_name               = aws_key_pair.auth.id
-//   vpc_security_group_ids = [aws_security_group.default.id]
-//   subnet_id              = module.vpc.public_subnets[0]
-//   user_data              = <<EOF
-// <script>
-//   winrm quickconfig -q & winrm set winrm/config @{MaxTimeoutms="1800000"} & winrm set winrm/config/service @{AllowUnencrypted="true"} & winrm set winrm/config/service/auth @{Basic="true"}
-// </script>
-// <powershell>
-// netsh advfirewall firewall add rule name="WinRM in" protocol=TCP dir=in profile=any localport=5985 remoteip=any localip=any action=allow
-// net user ${var.aws_instance_username} '${var.aws_instance_password}' /add /y
-// net localgroup administrators ${var.aws_instance_username} /add
-// </powershell>
-// EOF
+  ami                    = data.aws_ami.windows.id
+  key_name               = aws_key_pair.auth.id
+  vpc_security_group_ids = [aws_security_group.default.id]
+  subnet_id              = module.vpc.public_subnets[0]
+  user_data              = <<EOF
+<script>
+  winrm quickconfig -q & winrm set winrm/config @{MaxTimeoutms="1800000"} & winrm set winrm/config/service @{AllowUnencrypted="true"} & winrm set winrm/config/service/auth @{Basic="true"}
+</script>
+<powershell>
+netsh advfirewall firewall add rule name="WinRM in" protocol=TCP dir=in profile=any localport=5985 remoteip=any localip=any action=allow
+net user ${var.aws_instance_username} '${var.aws_instance_password}' /add /y
+net localgroup administrators ${var.aws_instance_username} /add
+</powershell>
+EOF
 
-//   provisioner "remote-exec" {
-//     inline = [
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole",
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer",
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures",
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors",
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect",
-//       "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment"
-//     ]
-//   }
-// }
+  provisioner "remote-exec" {
+    inline = [
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole",
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer",
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures",
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors",
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect",
+      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment"
+    ]
+  }
+}
 
 ###################
 # Jenkins Instances
@@ -207,7 +238,7 @@ resource "aws_instance" "web-01" {
 #  source_dest_check       = true
 #  disable_api_termination = false
 
-#  ami                    = var.aws_ami_linux
+#  ami                    = data.aws_ami.ubuntu.id
 #  key_name               = aws_key_pair.auth.id
 #  vpc_security_group_ids = [aws_security_group.default.id]
 #  subnet_id              = module.vpc.public_subnets[1]
