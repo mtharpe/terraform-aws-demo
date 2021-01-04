@@ -4,10 +4,12 @@ variable "user" {
 
 variable "public_key" {
   description = "Public key info"
+  sensitive   = true
 }
 
 variable "private_key" {
   description = "Private key info"
+  sensitive   = true
 }
 
 variable "key_name" {
@@ -20,19 +22,12 @@ variable "aws_region" {
   default     = "us-east-2"
 }
 
-variable "aws_ami_linux" {
-  default = "ami-07c1207a9d40bc3bd"
-}
-
-variable "aws_ami_windows" {
-  default = "ami-0dab4b4b372b05414"
-}
-
 variable "aws_instance_username" {
   default = ""
 }
 
 variable "aws_instance_password" {
-  default = ""
+  default   = ""
+  sensitive = true
 }
 
