@@ -250,7 +250,7 @@ resource "aws_instance" "jenkins-01" {
       "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
       "sudo add-apt-repository universe",
       "sudo apt-get update",
-      "sudo apt-get install jenkins -y"
+      "sudo apt-get install jenkins -y --allow-unauthenticated"
     ]
   }
 }
