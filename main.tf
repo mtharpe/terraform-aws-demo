@@ -27,6 +27,27 @@ resource "aws_key_pair" "auth" {
   public_key = var.public_key
 }
 
+
+resource "aws_iam_policy" "policy" {
+  name        = "${var.user}-policy"
+  description = "${var.user}-Demo-Policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ec2:Describe*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 module "vpc" {
   source  = "app.terraform.io/mtharpe/vpc/aws"
   version = ">=1.0.0"
