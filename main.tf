@@ -39,7 +39,7 @@ resource "aws_iam_policy" "policy" {
     {
       "Action": [
         "ec2:Describe*",
-        "iam:Create*"
+        "iam:Create*" 
       ],
       "Effect": "Allow",
       "Resource": "*"
