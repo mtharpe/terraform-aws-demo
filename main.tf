@@ -37,7 +37,6 @@ module "vpc" {
   azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
 
   private_subnets  = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-  database_subnets = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
   public_subnets   = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
 
   create_database_subnet_group = true
