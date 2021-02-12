@@ -28,25 +28,24 @@ resource "aws_key_pair" "auth" {
 }
 
 
-resource "aws_iam_policy" "policy" {
-  name        = "${var.user}-policy"
-  description = "${var.user}-Demo-Policy"
+data "aws_iam_policy_document" "iam-doc" {
+  statement {
+    sid = "1"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:Describe*",
-        "iam:Create*" 
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
+    actions = [
+      "iam:Create*",
+      "iam:Delete*",
+    ]
+
+    resources = [
+      "arn:aws:iam:::*",
+    ]
+  }
 }
-EOF
+
+resource "aws_iam_policy" "iam-policy" {
+  name   = "${var.user}-base-policy"
+  policy = data.aws_iam_policy_document.iam-doc.json
 }
 
 module "vpc" {
