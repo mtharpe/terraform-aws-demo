@@ -21,13 +21,3 @@ variable "aws_region" {
   description = "AWS region to launch servers."
   default     = "us-east-2"
 }
-
-variable "aws_instance_username" {
-  default = ""
-}
-
-variable "aws_instance_password" {
-  default   = ""
-  sensitive = true
-}
-
