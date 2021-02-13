@@ -118,7 +118,7 @@ resource "aws_security_group" "default" {
 resource "aws_instance" "web-01" {
   tags = {
     Name = "${var.user}-web-01"
-    # Environment = "Demo"
+    Environment = "Demo"
   }
 
   instance_type = "t2.large" # can be t2.large
