@@ -92,7 +92,7 @@ resource "aws_security_group" "default" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"] # This will break policy!
+    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
   }
 
   # HTTP access from the VPC
@@ -118,7 +118,6 @@ resource "aws_security_group" "default" {
 resource "aws_instance" "web-01" {
   tags = {
     Name = "${var.user}-web-01"
-    Environment = "Demo"
   }
 
   instance_type = "t2.large" # can be t2.large
