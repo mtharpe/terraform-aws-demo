@@ -145,7 +145,7 @@ resource "aws_security_group" "default" {
 ##############
 resource "aws_instance" "web-01" {
   tags = {
-    Name = "${var.user}-web-01"
+    Name        = "${var.user}-web-01"
     Environment = "Test"
   }
 
