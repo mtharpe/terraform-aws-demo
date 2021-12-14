@@ -1,3 +1,4 @@
 .terraform/
 *.terraform
 .kitchen
+.terraform.lock.hcl
