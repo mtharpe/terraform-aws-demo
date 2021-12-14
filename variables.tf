@@ -17,11 +17,6 @@ variable "key_name" {
   default     = "mtharpe-demo-terraform"
 }
 
-variable "aws_region" {
-  description = "AWS region to launch servers."
-  default     = "us-east-2"
-}
-
 variable "aws_instance_username" {
   default = ""
 }
