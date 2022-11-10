@@ -269,7 +269,7 @@ resource "aws_db_instance" "default" {
   allocated_storage      = 10
   engine                 = "mysql"
   instance_class         = "db.t2.micro"
-  name                   = "${var.user}DemoDB"
+  db_name                   = "${var.user}DemoDB"
   username               = var.aws_instance_username
   password               = var.aws_instance_password
   vpc_security_group_ids = [aws_security_group.default.id]
