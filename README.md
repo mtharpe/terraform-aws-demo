@@ -10,46 +10,45 @@ Terraform demo in aws
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12 |
-| aws | ~> 2.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >=3.69.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.0 |
-| terraform | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >=3.69.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | app.terraform.io/mtharpe/vpc/aws | >=1.0.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_db_instance.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance) | resource |
+| [aws_instance.jenkins-01](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_instance.mgmt-01](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_instance.web-01](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
+| [aws_key_pair.auth](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
+| [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_ami.ubuntu](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_ami.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| aws\_ami\_linux | n/a | `string` | `"ami-0fc20dd1da406780b"` | no |
-| aws\_ami\_windows | n/a | `string` | `"ami-067317d2d40fd5919"` | no |
-| aws\_region | AWS region to launch servers. | `string` | `"us-east-2"` | no |
-| chef\_environment | Chef global vars | `string` | `"_default"` | no |
-| chef\_pem | n/a | `string` | `""` | no |
-| chef\_server\_url | n/a | `string` | `"https://api.chef.io/organizations/axis"` | no |
-| chef\_username | n/a | `string` | `"mtharpe"` | no |
-| instance\_password | n/a | `string` | `""` | no |
-| instance\_username | n/a | `string` | `""` | no |
-| key\_name | Desired name of AWS key pair | `string` | `"terraform"` | no |
-| local\_ip | n/a | `string` | `"68.44.31.188/32"` | no |
-| private\_key | Private key info | `any` | n/a | yes |
-| public\_key | Public key info | `any` | n/a | yes |
-| server\_runlist | n/a | `string` | `"server::default"` | no |
+| <a name="input_aws_instance_password"></a> [aws\_instance\_password](#input\_aws\_instance\_password) | n/a | `string` | `""` | no |
+| <a name="input_aws_instance_username"></a> [aws\_instance\_username](#input\_aws\_instance\_username) | n/a | `string` | `""` | no |
+| <a name="input_key_name"></a> [key\_name](#input\_key\_name) | Desired name of AWS key pair | `string` | `"mtharpe-demo-terraform"` | no |
+| <a name="input_private_key"></a> [private\_key](#input\_private\_key) | Private key info | `any` | n/a | yes |
+| <a name="input_public_key"></a> [public\_key](#input\_public\_key) | Public key info | `any` | n/a | yes |
+| <a name="input_user"></a> [user](#input\_user) | This is going to be the Org username | `any` | n/a | yes |
 
 ## Outputs
 
-No output
-
-## License and Maintainer
-
-Maintainer:: HashiCorp (<hello@hashicorp.com>)
-
-Source:: https://github.com/mtharpe/terraform-aws-demo
-
-Issues:: https://github.com/mtharpe/terraform-aws-demo/issues
-
-License:: Apache-2.0
-
+No outputs.
