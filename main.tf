@@ -53,8 +53,8 @@ resource "aws_key_pair" "auth" {
 }
 
 module "vpc" {
-  source  = "app.terraform.io/mtharpe/vpc/aws"
-  version = ">=1.0.0"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = ">=5.0.0"
 
   name = "${var.user}-demo-vpc"
   cidr = "10.0.0.0/16"
