@@ -210,19 +210,25 @@ resource "aws_instance" "mgmt-01" {
 netsh advfirewall firewall add rule name="WinRM in" protocol=TCP dir=in profile=any localport=5985 remoteip=any localip=any action=allow
 net user ${var.aws_instance_username} '${var.aws_instance_password}' /add /y
 net localgroup administrators ${var.aws_instance_username} /add
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect
+Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment
 </powershell>
 EOF
 
-  provisioner "remote-exec" {
-    inline = [
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole",
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer",
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures",
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors",
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect",
-      "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment"
-    ]
-  }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole",
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServer",
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-CommonHttpFeatures",
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpErrors",
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-HttpRedirect",
+  #     "powershell -command Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationDevelopment"
+  #   ]
+  # }
 }
 
 ###################
