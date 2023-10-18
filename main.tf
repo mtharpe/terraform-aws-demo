@@ -43,6 +43,20 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+#########################################
+# HCP Packer Instance Data
+#########################################
+
+data "hcp_packer_image" "packer-run-tasks-demo" {
+  bucket_name     = "packer-run-tasks-demo"
+  channel         = "latest"
+  cloud_provider  = "aws"
+  region          = "us-east-2"
+}
+
+# Then replace your existing references with
+# data.hcp_packer_image.packer-run-tasks-demo.cloud_image_id
+
 ##############################
 # Setup key for authentication
 ##############################
@@ -132,7 +146,8 @@ resource "aws_instance" "web-01" {
 
   instance_type = "t2.large" # can be t2.large
 
-  ami                    = data.aws_ami.ubuntu.id
+ #ami                    = data.aws_ami.ubuntu.id
+  ami                    = data.hcp_packer_image.packer-run-tasks-demo.cloud_image_id
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
   subnet_id              = module.vpc.public_subnets[0]
