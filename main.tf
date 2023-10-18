@@ -7,10 +7,15 @@ terraform {
       source  = "hashicorp/aws"
       version = ">=3.69.0"
     }
+    hcp = {
+      source = "hashicorp/hcp"
+      version = ">=0.73.0"
+    }
   }
 }
 
 provider "aws" {}
+provider "hcp" {}
 
 #########################################
 # Get all of the AMI's from AWS
