@@ -8,7 +8,7 @@ terraform {
       version = ">=3.69.0"
     }
     hcp = {
-      source = "hashicorp/hcp"
+      source  = "hashicorp/hcp"
       version = ">=0.73.0"
     }
   }
@@ -38,7 +38,7 @@ data "aws_ami" "ubuntu" {
   owners      = ["099720109477"] # Canonical
 
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd/ubuntu-kinetic-22.10-amd64-server-*"]
   }
 
@@ -53,10 +53,10 @@ data "aws_ami" "ubuntu" {
 #########################################
 
 data "hcp_packer_image" "packer-run-tasks-demo" {
-  bucket_name     = "packer-run-tasks-demo"
-  channel         = "latest"
-  cloud_provider  = "aws"
-  region          = "us-east-2"
+  bucket_name    = "packer-run-tasks-demo"
+  channel        = "latest"
+  cloud_provider = "aws"
+  region         = "us-east-2"
 }
 
 # Then replace your existing references with
@@ -79,9 +79,9 @@ module "vpc" {
 
   azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
 
-  private_subnets  = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
 
-  public_subnets   = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
+  public_subnets = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
 
   create_database_subnet_group = true
 
@@ -151,7 +151,7 @@ resource "aws_instance" "web-01" {
 
   instance_type = "t2.large" # can be t2.large
 
- #ami                    = data.aws_ami.ubuntu.id
+  #ami                    = data.aws_ami.ubuntu.id
   ami                    = data.hcp_packer_image.packer-run-tasks-demo.cloud_image_id
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]

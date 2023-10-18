@@ -19,11 +19,11 @@ variable "key_name" {
 
 variable "aws_instance_username" {
   description = "Username for the AWS instance"
-  default = ""
+  default     = ""
 }
 
 variable "aws_instance_password" {
   description = "Password for the AWS instance"
-  default   = ""
-  sensitive = true
+  default     = ""
+  sensitive   = true
 }
