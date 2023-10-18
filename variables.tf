@@ -16,13 +16,3 @@ variable "key_name" {
   description = "Desired name of AWS key pair"
   default     = "mtharpe-demo-terraform"
 }
-
-variable "aws_instance_username" {
-  default = ""
-}
-
-variable "aws_instance_password" {
-  default   = ""
-  sensitive = true
-}
-
