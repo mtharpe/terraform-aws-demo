@@ -18,37 +18,6 @@ provider "aws" {}
 provider "hcp" {}
 
 #########################################
-# Get all of the AMI's from AWS
-#########################################
-data "aws_ami" "windows" {
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["Windows_Server-2019-English-Full-Base-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-  owners = ["801119661308"] # Canonical
-}
-
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-kinetic-22.10-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-#########################################
 # HCP Packer Instance Data
 #########################################
 
@@ -114,13 +83,6 @@ resource "aws_security_group" "default" {
   ingress {
     from_port   = 22
     to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 5985
-    to_port     = 5986
     protocol    = "tcp"
     cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
   }
