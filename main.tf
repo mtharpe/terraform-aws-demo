@@ -36,7 +36,6 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name = "name"
-    #values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
     values = ["ubuntu/images/hvm-ssd/ubuntu-kinetic-22.10-amd64-server-*"]
   }
 
@@ -170,7 +169,7 @@ resource "aws_instance" "web-01" {
   ami                    = data.aws_ami.ubuntu.id
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.default.id]
-  subnet_id              = module.vpc.public_subnets[0]
+  subnet_id              = module.vpc.public_subnets[2]
 
   provisioner "remote-exec" {
     inline = [
