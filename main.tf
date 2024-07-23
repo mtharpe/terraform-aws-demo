@@ -10,7 +10,9 @@ terraform {
   }
 }
 
-provider "aws" {}
+provider "aws" {
+  region = "us-east-1"
+}
 
 #########################################
 # Get all of the AMI's from AWS
