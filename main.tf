@@ -36,7 +36,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-kinetic-22.10-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
 
   filter {
@@ -98,7 +98,7 @@ resource "aws_security_group" "default" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
   }
 
   ingress {
@@ -171,14 +171,14 @@ resource "aws_instance" "web-01" {
   vpc_security_group_ids      = [aws_security_group.default.id]
   subnet_id                   = module.vpc.public_subnets[2]
   associate_public_ip_address = true
-  user_data                   = <<EOF
-  #! /bin/bash
-  sudo apt-get update
-  sudo apg-get install apache2 -y
-  sudo systemctl start apache2
-  sudo systemctl enable apache2
-  echo "<h1>Welcome to the Web Server</h1>" | sudo tee /var/www/html/index.html
-  EOF
+
+  provisioner "remote-exec" {
+    inline = [
+      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
+      "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
+      "sudo apt install apache2 -y"
+    ]
+  }
 }
 
 #####################
