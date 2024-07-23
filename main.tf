@@ -98,14 +98,14 @@ resource "aws_security_group" "default" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   ingress {
     from_port   = 5985
     to_port     = 5986
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   # RDP access from the VPC and LocalIP
@@ -113,7 +113,7 @@ resource "aws_security_group" "default" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   # HTTP access from the VPC
@@ -137,7 +137,7 @@ resource "aws_security_group" "default" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16", "0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   # outbound internet access
@@ -171,14 +171,10 @@ resource "aws_instance" "web-01" {
   vpc_security_group_ids      = [aws_security_group.default.id]
   subnet_id                   = module.vpc.public_subnets[2]
   associate_public_ip_address = true
-
-  provisioner "remote-exec" {
-    inline = [
-      "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init to finish...'; sleep 1; done",
-      "sudo apt update && sleep $((RANDOM % 10)) && sudo apt update",
-      "sudo apt install apache2 -y"
-    ]
-  }
+  user_data                   = <<EOF
+  sudo apt update && sleep $((RANDOM % 10)) && sudo apt update
+  sudo apt install apache2 -y
+  EOF
 }
 
 #####################
