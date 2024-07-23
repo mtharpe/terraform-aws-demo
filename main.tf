@@ -172,8 +172,12 @@ resource "aws_instance" "web-01" {
   subnet_id                   = module.vpc.public_subnets[2]
   associate_public_ip_address = true
   user_data                   = <<EOF
-  sudo apt update && sleep $((RANDOM % 10)) && sudo apt update
-  sudo apt install apache2 -y
+  #! /bin/bash
+  sudo apt-get update
+  sudo apg-get install apache2 -y
+  sudo systemctl start apache2
+  sudo systemctl enable apache2
+  echo "<h1>Welcome to the Web Server</h1>" | sudo tee /var/www/html/index.html
   EOF
 }
 
