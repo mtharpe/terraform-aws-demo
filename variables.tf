@@ -22,13 +22,13 @@ variable "key_name" {
 }
 
 variable "aws_instance_username" {
-  type        = string
+  type    = string
   default = ""
 }
 
 variable "aws_instance_password" {
   default   = ""
-  type        = string
+  type      = string
   sensitive = true
 }
 
