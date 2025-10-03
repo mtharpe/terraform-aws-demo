@@ -1,4 +1,4 @@
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mtharpe/terraform-aws-demo/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mtharpe/terraform-aws-demo/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mtharpe/terraform-aws-demo/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mtharpe/terraform-aws-demo/tree/main)
 
 # terraform-aws-demo
 Terraform demo in aws
